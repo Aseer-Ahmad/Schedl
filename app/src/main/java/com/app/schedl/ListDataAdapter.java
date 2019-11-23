@@ -41,11 +41,11 @@ public class ListDataAdapter extends RecyclerView.Adapter<ListDataAdapter.ListDa
 
     }
 
-
     @Override
     public int getItemCount() {
         return list.size();
     }
+
 
     class ListDataViewHolder extends  RecyclerView.ViewHolder{
 
@@ -59,4 +59,6 @@ public class ListDataAdapter extends RecyclerView.Adapter<ListDataAdapter.ListDa
             textView_timeleft = itemView.findViewById(R.id.textview_timeleft);
         }
     }
+
+
 }
