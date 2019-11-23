@@ -4,11 +4,13 @@ import java.util.Date;
 
 public class DataModel {
     private String itemname;
-    private Date itemdate;
+    private Date itemtime_begin;
+    private int itemtime_tocomplete;
 
-    public DataModel(String itemname, Date itemdate) {
+    public DataModel(String itemname, Date itemtime_begin, int itemtime_tocomplete) {
         this.itemname = itemname;
-        this.itemdate = itemdate;
+        this.itemtime_begin = itemtime_begin;
+        this.itemtime_tocomplete = itemtime_tocomplete;
     }
 
     public String getItemname() {
@@ -19,11 +21,19 @@ public class DataModel {
         this.itemname = itemname;
     }
 
-    public Date getItemdate() {
-        return itemdate;
+    public Date getItemtime_begin() {
+        return itemtime_begin;
     }
 
-    public void setItemdate(Date itemdate) {
-        this.itemdate = itemdate;
+    public void setItemtime_begin(Date itemtime_begin) {
+        this.itemtime_begin = itemtime_begin;
+    }
+
+    public int getItemtime_tocomplete() {
+        return itemtime_tocomplete;
+    }
+
+    public void setItemtime_tocomplete(int itemtime_tocomplete) {
+        this.itemtime_tocomplete = itemtime_tocomplete;
     }
 }

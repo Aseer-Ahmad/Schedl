@@ -13,6 +13,8 @@ import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -27,9 +29,12 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private Button button_additem;
+    private ImageButton button_addhrs;
+    private ImageButton button_reducehrs;
     private EditText editText_item;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private TextView textView_timetojob;
     private ItemTouchHelper itemTouchHelper;
+
 
     //resources
     private ArrayList<DataModel> arraylist_items = new ArrayList<>();
@@ -37,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
     //constants & flags
     private String deletedItem_name = null;
-    private Date deletedItem_date ;
+    private Date deletedItem_timebegin;
+    private int deleteItem_timetocomplete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
             switch(direction){
                 case ItemTouchHelper.RIGHT:
                     deletedItem_name = arraylist_items.get(position).getItemname();
-                    deletedItem_date = arraylist_items.get(position).getItemdate();
+                    deletedItem_timebegin = arraylist_items.get(position).getItemtime_begin();
+                    deleteItem_timetocomplete = arraylist_items.get(position).getItemtime_tocomplete();
 
                     arraylist_items.remove(position);
                     listDataAdapter.notifyItemRemoved(position);
@@ -74,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                             .setAction("Undo", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    arraylist_items.add(position, new DataModel(deletedItem_name, deletedItem_date) );
+                                    arraylist_items.add(position, new DataModel(deletedItem_name, deletedItem_timebegin, deleteItem_timetocomplete) );
                                     listDataAdapter.notifyItemInserted(position);
                                 }
                             }).show();
@@ -100,7 +107,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerView =findViewById(R.id.recyclerview_items);
         //--------------------
         button_additem = findViewById(R.id.button_additem);
+        button_addhrs = findViewById(R.id.button_addhrs);
+        button_reducehrs = findViewById(R.id.button_reducehrs);
         editText_item = findViewById(R.id.edittext_item);
+        textView_timetojob = findViewById(R.id.textview_timetojob);
     }
 
     private void clickListeners(){
@@ -109,15 +119,37 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String s = editText_item.getText().toString();
                 Date currenttime = Calendar.getInstance().getTime();
+                int time = Integer.parseInt(textView_timetojob.getText().toString());
 
-                addData(s, currenttime);
-                editText_item.setText("");
+                addData(s, currenttime, time);
+            }
+        });
+
+        button_addhrs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int count = Integer.parseInt(textView_timetojob.getText().toString());
+                textView_timetojob.setText( String.valueOf(count+1) );
+            }
+        });
+
+        button_reducehrs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int count = Integer.parseInt(textView_timetojob.getText().toString());
+                if (count != 1)
+                    textView_timetojob.setText(String.valueOf(count-1));
             }
         });
     }
 
-    private void addData(String s , Date currenttime){
-            arraylist_items.add(0, new DataModel(s, currenttime));
+    private void addData(String s , Date currenttime, int time){
+            arraylist_items.add(0, new DataModel(s, currenttime, time));
+
+            //reset
+            textView_timetojob.setText("1");
+            editText_item.setText("");
+
             listDataAdapter.notifyItemInserted(0);
     }
 

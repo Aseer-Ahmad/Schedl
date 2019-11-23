@@ -34,7 +34,8 @@ public class ListDataAdapter extends RecyclerView.Adapter<ListDataAdapter.ListDa
         DataModel dataModel = list.get(position);
 
         holder.textView_itemname.setText(dataModel.getItemname());
-        holder.textView_itemdate.setText(dataModel.getItemdate().toString());
+        holder.textView_itemdate.setText(dataModel.getItemtime_begin().toString());
+        holder.textView_timeleft.setText( String.valueOf(dataModel.getItemtime_tocomplete()) );
 
         //set click listeners here
 
@@ -48,13 +49,14 @@ public class ListDataAdapter extends RecyclerView.Adapter<ListDataAdapter.ListDa
 
     class ListDataViewHolder extends  RecyclerView.ViewHolder{
 
-        TextView textView_itemname, textView_itemdate;
+        TextView textView_itemname, textView_itemdate, textView_timeleft;
 
 
         public ListDataViewHolder(@NonNull View itemView) {
             super(itemView);
             textView_itemdate = itemView.findViewById(R.id.textview_itemdate);
             textView_itemname = itemView.findViewById(R.id.textview_itemname);
+            textView_timeleft = itemView.findViewById(R.id.textview_timeleft);
         }
     }
 }
