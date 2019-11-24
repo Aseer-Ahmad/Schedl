@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,10 +19,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,22 +46,56 @@ public class MainActivity extends AppCompatActivity {
     //resources
     private ArrayList<DataModel> arraylist_items = new ArrayList<>();
     private ListDataAdapter listDataAdapter;
+    private SharedPreferences sharedPreferences;
 
     //constants & flags
     private String deletedItem_name = null;
     private Date deletedItem_timebegin;
     private int deleteItem_timetocomplete;
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        init();
+
+        retrieveSharedPreference();
+
         findComponents();
 
         buildRecyclerView();
 
         clickListeners();
+
+    }
+
+    private void init() {
+        sharedPreferences = getSharedPreferences("App_settings", MODE_PRIVATE);
+    }
+
+    private void packageSharedPreference(){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(arraylist_items);
+
+        editor.putString("DATA_LIST", json);
+        editor.commit();
+        Log.d(TAG, "stored shared preference");
+    }
+
+    private void retrieveSharedPreference(){
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("DATA_LIST", null);
+        Type type = new TypeToken<ArrayList<DataModel>>(){}.getType();
+        arraylist_items = gson.fromJson(json, type);
+
+        if(arraylist_items == null)
+            arraylist_items = new ArrayList<>();
+        Log.d(TAG, "retrieved shared preference");
 
     }
 
@@ -71,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
             switch(direction){
                 case ItemTouchHelper.RIGHT:
+                    // restored items after deleted
                     deletedItem_name = arraylist_items.get(position).getItemname();
                     deletedItem_timebegin = arraylist_items.get(position).getItemtime_begin();
                     deleteItem_timetocomplete = arraylist_items.get(position).getItemtime_tocomplete();
@@ -158,4 +200,10 @@ public class MainActivity extends AppCompatActivity {
         return 0;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        packageSharedPreference();
+    }
 }
