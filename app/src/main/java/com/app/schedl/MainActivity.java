@@ -123,11 +123,13 @@ public class MainActivity extends AppCompatActivity {
                             .setAction("Undo", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
+                                    //update addData to accept position parameter and then replace code below
                                     arraylist_items.add(position, new DataModel(deletedItem_name, deletedItem_timebegin, deleteItem_timetocomplete) );
                                     listDataAdapter.notifyItemInserted(position);
                                 }
                             }).show();
-
+                    //update shared preference
+                    packageSharedPreference();
                     break;
             }
         }
@@ -185,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void addData(String s , Date currenttime, int time){
+    private void addData( String s , Date currenttime, int time){
             arraylist_items.add(0, new DataModel(s, currenttime, time));
 
             //reset
@@ -193,6 +195,9 @@ public class MainActivity extends AppCompatActivity {
             editText_item.setText("");
 
             listDataAdapter.notifyItemInserted(0);
+
+            //update shared preference
+            packageSharedPreference();
     }
 
     public int getPriorityPosition(){
