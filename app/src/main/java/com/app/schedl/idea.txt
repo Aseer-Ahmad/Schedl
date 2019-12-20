@@ -1,0 +1,8 @@
+- ToDo (Priority List) [FRAGMENT]
+- Daily Reminder  [FRAGMENT]
+    1. Has to be expandable Recycler View
+        eg: Food
+            a) Early Morning Water [Checkbox]
+            b) Lunch
+            c) Dinner egg
+    2. Will reshedule every new day

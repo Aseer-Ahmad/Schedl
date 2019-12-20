@@ -2,22 +2,29 @@ package com.app.schedl;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+//import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,18 +36,16 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DialogTodo.DialogTodoListener {
 
     //components
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private Button button_additem;
-    private ImageButton button_addhrs;
-    private ImageButton button_reducehrs;
-    private EditText editText_item;
-    private TextView textView_timetojob;
     private ItemTouchHelper itemTouchHelper;
+    private FloatingActionButton fab;
+    private BottomAppBar bottomAppBar;
 
 
     //resources
@@ -74,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
+
         sharedPreferences = getSharedPreferences("App_settings", MODE_PRIVATE);
     }
 
@@ -101,10 +107,12 @@ public class MainActivity extends AppCompatActivity {
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT ) {
         @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
+                              @NonNull RecyclerView.ViewHolder target) {
             return false;
         }
 
+        @SuppressLint("WrongConstant")
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
@@ -119,15 +127,23 @@ public class MainActivity extends AppCompatActivity {
 
                     arraylist_items.remove(position);
                     listDataAdapter.notifyItemRemoved(position);
-                    Snackbar.make(recyclerView, deletedItem_name, Snackbar.LENGTH_LONG)
+                    Snackbar snack = Snackbar.make(recyclerView, deletedItem_name, Snackbar.LENGTH_LONG)
                             .setAction("Undo", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     //update addData to accept position parameter and then replace code below
-                                    arraylist_items.add(position, new DataModel(deletedItem_name, deletedItem_timebegin, deleteItem_timetocomplete) );
+                                    arraylist_items.add(position, new DataModel(deletedItem_name,
+                                                                                deletedItem_timebegin,
+                                                                                deleteItem_timetocomplete) );
                                     listDataAdapter.notifyItemInserted(position);
                                 }
-                            }).show();
+                            });//.show();
+
+                    CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snack.getView().getLayoutParams();
+                    params.setMargins(0, 0, 0, bottomAppBar.getHeight());
+                    snack.getView().setLayoutParams(params);
+                    snack.show();
+
                     //update shared preference
                     packageSharedPreference();
                     break;
@@ -149,56 +165,66 @@ public class MainActivity extends AppCompatActivity {
 
     private void findComponents() {
         recyclerView =findViewById(R.id.recyclerview_items);
-        //--------------------
-        button_additem = findViewById(R.id.button_additem);
-        button_addhrs = findViewById(R.id.button_addhrs);
-        button_reducehrs = findViewById(R.id.button_reducehrs);
-        editText_item = findViewById(R.id.edittext_item);
-        textView_timetojob = findViewById(R.id.textview_timetojob);
+        fab = findViewById(R.id.fab);
+        bottomAppBar = findViewById(R.id.bottom_app_bar);
+        setSupportActionBar(bottomAppBar);
     }
+
+
+    //for items on the bottom bar
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.bottom_nav_menu, menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId() ){
+//          case R.id.navitem_dailyrem:
+//              Log.d(TAG, "clicked reminder navigation item");
+//              Toast.makeText(getApplicationContext(), "Daily reminders clicked", Toast.LENGTH_SHORT).show();
+//              return true;
+            case android.R.id.home:
+                BottomNavigationDrawerFragment bndf = new BottomNavigationDrawerFragment();
+                bndf.show(getSupportFragmentManager(), bndf.getTag() );
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void clickListeners(){
-        button_additem.setOnClickListener(new View.OnClickListener() {
+
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String s = editText_item.getText().toString();
-                Date currenttime = Calendar.getInstance().getTime();
-                int time = Integer.parseInt(textView_timetojob.getText().toString());
+                Log.d(TAG, "add button clicked");
 
-                addData(s, currenttime, time);
+                DialogTodo dialogTodo  = new DialogTodo();
+                dialogTodo.show(getSupportFragmentManager(), dialogTodo.getTag());
             }
         });
 
-        button_addhrs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int count = Integer.parseInt(textView_timetojob.getText().toString());
-                textView_timetojob.setText( String.valueOf(count+1) );
-            }
-        });
-
-        button_reducehrs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int count = Integer.parseInt(textView_timetojob.getText().toString());
-                if (count != 1)
-                    textView_timetojob.setText(String.valueOf(count-1));
-            }
-        });
     }
 
-    private void addData( String s , Date currenttime, int time){
-            arraylist_items.add(0, new DataModel(s, currenttime, time));
+    @Override
+    public void addData(String item_desc, Date currenttime, int time) {
+            arraylist_items.add(0, new DataModel(item_desc, currenttime, time));
 
             //reset
-            textView_timetojob.setText("1");
-            editText_item.setText("");
+            //textView_timetojob.setText("1");
+            //editText_item.setText("");
 
             listDataAdapter.notifyItemInserted(0);
 
             //update shared preference
             packageSharedPreference();
+
     }
+
 
     public int getPriorityPosition(){
 
