@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements DialogTodo.Dialog
 
                     arraylist_items.remove(position);
                     listDataAdapter.notifyItemRemoved(position);
-                    Snackbar snack = Snackbar.make(recyclerView, deletedItem_name, Snackbar.LENGTH_LONG)
+                    Snackbar snack = Snackbar.make(recyclerView, deletedItem_name+": Deleted", Snackbar.LENGTH_LONG)
                             .setAction("Undo", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
