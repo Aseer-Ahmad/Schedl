@@ -3,8 +3,8 @@
     <group android:checkableBehavior="none">
 
         <item
-            android:id="@+id/navitem_dailyrem"
-            android:icon="@drawable/ic_today_black_32dp"
+            android:id="@+id/menu_item1"
+            android:icon="@drawable/ic_layers_black_24dp"
             android:title="@string/nav_item1" />
 
     </group>

@@ -8,11 +8,10 @@
     tools:context=".MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_items"
+        android:id="@+id/recyclerview_remindersdaily"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="5dp"
-        android:scrollbars="vertical" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_app_bar"
@@ -23,11 +22,13 @@
         app:buttonGravity="center_vertical"
         app:hideOnScroll="true"
         app:fabAlignmentMode="center"
+        app:fabCradleRoundedCornerRadius="16dp"
         app:fabAttached="true"
         app:navigationIcon="@drawable/ic_menu_black_24dp" />
 
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fab_remindersdaily"
         android:layout_width="wrap_content"
         android:src="@drawable/ic_fab_white_32dp"
         android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package com.app.schedl;
+package com.app.schedl.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,15 +9,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.schedl.Models.ToDo;
+import com.app.schedl.R;
+
 import java.util.List;
 
-public class ListDataAdapter extends RecyclerView.Adapter<ListDataAdapter.ListDataViewHolder> {
+public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ListDataViewHolder> {
 
     private Context context;
-    private List<DataModel> list;
+    private List<ToDo> list;
 
 
-    public ListDataAdapter(Context context, List<DataModel> list) {
+    public ToDoListAdapter(Context context, List<ToDo> list) {
         this.context = context;
         this.list = list;
     }
@@ -25,17 +28,17 @@ public class ListDataAdapter extends RecyclerView.Adapter<ListDataAdapter.ListDa
     @NonNull
     @Override
     public ListDataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_list, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_todolist, parent, false);
         return new ListDataViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ListDataViewHolder holder, int position) {
-        DataModel dataModel = list.get(position);
+        ToDo toDo = list.get(position);
 
-        holder.textView_itemname.setText(dataModel.getItemname());
-        holder.textView_itemdate.setText(dataModel.getItemtime_begin().toString());
-        holder.textView_timeleft.setText( String.valueOf(dataModel.getItemtime_tocomplete()) );
+        holder.textView_itemname.setText(toDo.getItemname());
+        holder.textView_itemdate.setText(toDo.getItemtime_begin().toString());
+        holder.textView_timeleft.setText( String.valueOf(toDo.getItemtime_tocomplete()) );
 
         //set click listeners here
 

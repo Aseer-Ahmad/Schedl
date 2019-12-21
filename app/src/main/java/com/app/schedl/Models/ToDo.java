@@ -1,13 +1,13 @@
-package com.app.schedl;
+package com.app.schedl.Models;
 
 import java.util.Date;
 
-public class DataModel {
+public class ToDo {
     private String itemname;
     private Date itemtime_begin;
     private int itemtime_tocomplete;
 
-    public DataModel(String itemname, Date itemtime_begin, int itemtime_tocomplete) {
+    public ToDo(String itemname, Date itemtime_begin, int itemtime_tocomplete) {
         this.itemname = itemname;
         this.itemtime_begin = itemtime_begin;
         this.itemtime_tocomplete = itemtime_tocomplete;

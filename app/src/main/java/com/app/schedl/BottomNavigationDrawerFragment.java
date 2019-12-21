@@ -11,12 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class BottomNavigationDrawerFragment extends BottomSheetDialogFragment {
 
     private NavigationView navigationView;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -28,11 +30,12 @@ public class BottomNavigationDrawerFragment extends BottomSheetDialogFragment {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-                switch (menuItem.getItemId()){
-                    case R.id.navitem_dailyrem :
-                        Toast.makeText(getContext(), "Daily Reminder nav clicked", Toast.LENGTH_SHORT).show();
+                switch(menuItem.getItemId()){
+                    case R.id.menu_item1:
+                        Toast.makeText(getContext(), "Nav item 1 clicked", Toast.LENGTH_SHORT).show();
                         return true;
-                }
+
+              }
 
                 return true;
             }

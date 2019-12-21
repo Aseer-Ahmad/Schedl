@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Schedl</string>
-    <string name="nav_item1">Daily Reminder</string>
+    <string name="nav_item1">nav item 1</string>
 
 </resources>
