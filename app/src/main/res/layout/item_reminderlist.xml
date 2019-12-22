@@ -17,6 +17,7 @@
         <TextView
             android:id="@+id/textview_reminderitem"
             android:text="ITEM NAME"
+            android:gravity="left|center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -35,14 +36,13 @@
              app:layout_constraintTop_toBottomOf="@+id/textview_reminderitem">
 
 
-
-             <TextView
-                 android:text="SUB ITEM 1"
-                 android:layout_width="match_parent"
-                 android:layout_height="30dp"
-                 app:layout_constraintTop_toTopOf="parent"/>
-
-
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview_remindersub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toTopOf="@id/expandable_layout"
+                />
 
 
          </androidx.constraintlayout.widget.ConstraintLayout>

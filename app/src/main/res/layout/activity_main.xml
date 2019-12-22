@@ -4,8 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_remindersdaily"
@@ -22,7 +24,7 @@
         app:buttonGravity="center_vertical"
         app:hideOnScroll="true"
         app:fabAlignmentMode="center"
-        app:fabCradleRoundedCornerRadius="16dp"
+        app:fabCradleRoundedCornerRadius="20dp"
         app:fabAttached="true"
         app:navigationIcon="@drawable/ic_menu_black_24dp" />
 
@@ -34,6 +36,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorPrimaryBlack"
         app:layout_anchor="@id/bottom_app_bar"/>
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

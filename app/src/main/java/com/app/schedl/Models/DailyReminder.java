@@ -1,10 +1,14 @@
 package com.app.schedl.Models;
 
+import java.util.List;
+
 public class DailyReminder {
     private String item_name;
     private Boolean expanded;
+    private List<DailyReminderSub> list;
 
-    public DailyReminder(String item_name) {
+    public DailyReminder(String item_name, List<DailyReminderSub> list) {
+        this.list = list;
         this.item_name = item_name;
         this.expanded = false;
     }
@@ -23,5 +27,14 @@ public class DailyReminder {
 
     public void setItem_name(String item_name) {
         this.item_name = item_name;
+    }
+
+    public List<DailyReminderSub> getList() {
+        return list;
+    }
+
+
+    public void setList(List<DailyReminderSub> list) {
+        this.list = list;
     }
 }

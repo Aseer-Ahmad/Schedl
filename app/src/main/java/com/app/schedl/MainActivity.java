@@ -16,11 +16,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.schedl.Adapters.RemindersListAdapter;
+import com.app.schedl.Adapters.RemindersSubListAdapter;
 import com.app.schedl.Models.DailyReminder;
+import com.app.schedl.Models.DailyReminderSub;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -35,17 +38,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements DialogReminders.DialogReminderListener {
 
     //components
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView_reminders;
+    private RecyclerView recyclerview_reminderssubs;
     private FloatingActionButton fab;
     private BottomAppBar bottomAppBar;
 
 
     //resources
     private RemindersListAdapter remindersListAdapter ;
-    private List<DailyReminder> dailyReminderList;
+    private RemindersSubListAdapter remindersSubListAdapter;
+    private List<DailyReminder> dailyReminderList = new ArrayList<DailyReminder>();
+    private List<DailyReminderSub> dailyReminderSubList;
 
     //constants & flags
    private static final String TAG = MainActivity.class.getSimpleName();
@@ -60,26 +66,35 @@ public class MainActivity extends AppCompatActivity{
 
         findComponents();
 
+        buildRecyclerView();
+
+        clickListeners();
+
     }
 
-    private void init() {
-        dailyReminderList = new ArrayList<DailyReminder>();
-        dailyReminderList.add(new DailyReminder("ITEM 1 "));
-        dailyReminderList.add(new DailyReminder("ITEM 2 "));
-        dailyReminderList.add(new DailyReminder("ITEM 3 "));
-        dailyReminderList.add(new DailyReminder("ITEM 4 "));
 
-        remindersListAdapter = new RemindersListAdapter(getApplicationContext(), dailyReminderList);
+    private void init() {
+
 
     }
 
     private void findComponents() {
-        recyclerView = findViewById(R.id.recyclerview_remindersdaily);
-        recyclerView.setAdapter( remindersListAdapter );
+        recyclerView_reminders = findViewById(R.id.recyclerview_remindersdaily);
 
         fab = findViewById(R.id.fab_remindersdaily);
+
         bottomAppBar = findViewById(R.id.bottom_app_bar);
         setSupportActionBar(bottomAppBar);
+    }
+
+    private void buildRecyclerView(){
+
+        remindersListAdapter = new RemindersListAdapter( this, dailyReminderList);
+        //remindersSubListAdapter = new RemindersSubListAdapter( this, dailyReminderSubList);
+
+        recyclerView_reminders.setAdapter( remindersListAdapter );
+        //recyclerview_reminderssubs.setAdapter( remindersSubListAdapter);
+
     }
 
 
@@ -105,6 +120,10 @@ public class MainActivity extends AppCompatActivity{
 
                 return true;
 
+            case R.id.menu_item_daily_reminders_reset:
+                Toast.makeText(getApplicationContext(), "Reset All Items.", Toast.LENGTH_SHORT).show();
+                return true;
+
             case android.R.id.home:
                 BottomNavigationDrawerFragment bndf = new BottomNavigationDrawerFragment();
                 bndf.show(getSupportFragmentManager(), bndf.getTag() );
@@ -114,5 +133,31 @@ public class MainActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    public void addData(String remindername, String remindersubnames) {
+
+        dailyReminderSubList = new ArrayList<>();
+
+        String [] subnames = remindersubnames.split(",");
+        for(String s : subnames){
+            s = s.trim();
+            dailyReminderSubList.add(new DailyReminderSub(s));
+        }
+
+        dailyReminderList.add(new DailyReminder(remindername, dailyReminderSubList));
+        remindersListAdapter.notifyDataSetChanged();
+
+    }
+
+    private void clickListeners() {
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogReminders dialogReminders = new DialogReminders();
+                dialogReminders.show(getSupportFragmentManager(), dialogReminders.getTag());
+            }
+        });
+    }
 
 }
